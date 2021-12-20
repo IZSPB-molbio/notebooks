@@ -8,4 +8,4 @@ Per utilizzare l'eseguibile, è necessario cliccarci due volte sopra. Nota: il f
 
 Una volta creato il file batch.csv, selezionare tutti i file di sequenza e il file batch.csv e creare un archivio in formato **zip** (NO 7zip o altri formati!), cliccando col pulsante destro sui file selezionati e selezionando "Aggiungi ad archivio".
 
-Il file zip così creato andrà caricato sul server Icogen accedendovi con le credenziali nella cartella MEGA `Covid/icogen`.
+Il file zip così creato andrà caricato sul server Icogen accedendovi con le credenziali nella cartella MEGA `Covid/icogen`. Istruzioni dettagliate per questa operazione sono contenute nel paragrafo "Modalità del trasferimento ftps" a pagina 25 del documento IRIDA21-ICoGen.pdf, contenuto in questa repository.
