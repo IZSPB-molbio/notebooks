@@ -1,3 +1,4 @@
+import csv
 import os
 import glob
 
@@ -21,16 +22,27 @@ batch_file = open("batch.csv", 'w')
 # - DataPrelievo
 icogen_metadata_handle = open("sars-cov-2_db_export_icogen.csv", 'r')
 icogen_metadata = {}
-for i in icogen_metadata_handle:
-    corona, regione, comune, lab, sample_name, data_prelievo = i.split(",")
-    gg, mm, yyyy = data_prelievo.split("/")
-    data_prelievo = '-'.join([yyyy, mm, gg])
-    icogen_metadata[sample_name] = {'corona' : corona, 
-                                    'regione' : regione,
-                                    'comune' : comune,
-                                    'lab' : lab,
-                                    'sample_name' : sample_name,
-                                    'data_prelievo' : data_prelievo}
+
+with open("sars-cov-2_db_export_icogen.csv", 'rt') as f:
+    icogen_metadata_handle = csv.reader(f)
+    for i in icogen_metadata_handle:
+#        corona, regione, comune, lab, sample_name, data_prelievo = i.split(",")
+        [corona, regione, comune, lab, sample_name, data_prelievo] = i
+        try:
+            gg, mm, yyyy = data_prelievo.split("/")
+            data_prelievo = '-'.join([yyyy, mm, gg])
+        except:
+            print("Error in parsing data_prelievo for {sample_name}: {data_prelievo}".format(sample_name = sample_name, data_prelievo = data_prelievo))
+            data_prelievo = ""
+            pass
+        icogen_metadata[sample_name] = {'corona' : corona, 
+                                        'regione' : regione,
+                                        'comune' : comune,
+                                        'lab' : lab,
+                                        'sample_name' : sample_name,
+                                        'data_prelievo' : data_prelievo}
+
+print(list(icogen_metadata.keys())[:10])
 
 for R1, R2 in zip(fastq_R1, fastq_R2):
     #print("R1: ", R1)
@@ -38,18 +50,23 @@ for R1, R2 in zip(fastq_R1, fastq_R2):
     sample_name = "PT" + os.path.split(R1)[1].split("_")[0].split("-")[1]
     R1 = os.path.split(R1)[1]
     R2 = os.path.split(R2)[1]
-    print(sample_name)
+    print("Parsing: ", sample_name)
     filenames_file_dict[sample_name] = [R1, R2]
     filenames_file.write(",".join([sample_name, R1, R2])+"\n")
     try:
-        batch_file.write("{corona},{regione},{comune},{lab},{sample_name},{data_prelievo},{R1},{R2}\n".format(corona=icogen_metadata['corona'],
-                                                                                                              regione=icogen_metadata['regione'],
-                                                                                                              comune=icogen_metadata['comune'],
-                                                                                                              lab=icogen_metadata['lab'],
-                                                                                                              sample_name=icogen_metadata['sample_name'],
-                                                                                                              data_prelievo=icogen_metadata['data_prelievo']))
-    except:
+        batch_file.write("{corona},{regione},{comune},{lab},{sample_name},{data_prelievo},{R1},{R2}\n".format(corona=icogen_metadata[sample_name]['corona'],
+                      regione=icogen_metadata[sample_name]['regione'],
+                      comune=icogen_metadata[sample_name]['comune'],
+                      lab=icogen_metadata[sample_name]['lab'],
+                      sample_name=icogen_metadata[sample_name]['sample_name'],
+                      data_prelievo=icogen_metadata[sample_name]['data_prelievo'],
+                      R1=filenames_file_dict[sample_name][0],
+                      R2=filenames_file_dict[sample_name][1]))
+    except Exception as e:
+        print("Exception:", e)
         print("Error with sample: ", sample_name)
+        print(icogen_metadata[sample_name])
+        print(filenames_file_dict[sample_name])
         pass
 
 batch_file.close()
