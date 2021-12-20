@@ -8,7 +8,7 @@ fastq_R2 = sorted(glob.glob("COVID*_R2*.fastq.gz"))
 
 # filenames_file = open(os.path.join(run_folder, "filenames_list.csv"), 'w')
 filenames_file_dict = {}
-filenames_file = open("filenames_list.csv"), 'w')
+filenames_file = open("filenames_list.csv", 'w')
 batch_file = open("batch.csv", 'w')
 
 ## Parse Icogen metadata as exported from FMPro with these fields (in this order!)
