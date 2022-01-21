@@ -28,6 +28,7 @@ with open("sars-cov-2_db_export_icogen.csv", 'rt') as f:
     for i in icogen_metadata_handle:
 #        corona, regione, comune, lab, sample_name, data_prelievo = i.split(",")
         [corona, regione, comune, lab, sample_name, data_prelievo] = i
+        [corona, regione, comune, lab, sample_name, data_prelievo, provincia, accettazioneIZSPB, data_accettazione, codice_interno, origine_isolato, eta, data_ultima_vaccinazione, numero_vaccinazioni] = i
         try:
             gg, mm, yyyy = data_prelievo.split("/")
             data_prelievo = '-'.join([yyyy, mm, gg])
@@ -40,7 +41,15 @@ with open("sars-cov-2_db_export_icogen.csv", 'rt') as f:
                                         'comune' : comune,
                                         'lab' : lab,
                                         'sample_name' : sample_name,
-                                        'data_prelievo' : data_prelievo}
+                                        'data_prelievo' : data_prelievo,
+                                        'provincia' : provincia,
+                                        'accettazioneIZSPB' : accettazioneIZSPB,
+                                        'data_accettazione' : data_accettazione,
+                                        'codice_interno' : codice_interno,
+                                        'origine_isolato' : origine_isolato,
+                                        'eta' : eta,
+                                        'data_ultima_vaccinazione' : data_ultima_vaccinazione,
+                                        'numero_vaccinazioni' : numero_vaccinazioni}
 
 print(list(icogen_metadata.keys())[:10])
 
@@ -60,6 +69,14 @@ for R1, R2 in zip(fastq_R1, fastq_R2):
                       lab=icogen_metadata[sample_name]['lab'],
                       sample_name=icogen_metadata[sample_name]['sample_name'],
                       data_prelievo=icogen_metadata[sample_name]['data_prelievo'],
+                      provincia=icogen_metadata[sample_name]['provincia'],
+                      accettazioneIZSPB=icogen_metadata[sample_name]['accettazioneIZSPB'],
+                      data_accettazione=icogen_metadata[sample_name]['data_accettazione'],
+                      codice_interno=icogen_metadata[sample_name]['codice_interno'],
+                      origine_isolato=icogen_metadata[sample_name]['origine_isolato'],
+                      eta=icogen_metadata[sample_name]['eta'],
+                      data_ultima_vaccinazione=icogen_metadata[sample_name]['data_ultima_vaccinazione'],
+                      numero_vaccinazioni=icogen_metadata[sample_name]['numero_vaccinazioni'],
                       R1=filenames_file_dict[sample_name][0],
                       R2=filenames_file_dict[sample_name][1]))
     except Exception as e:
